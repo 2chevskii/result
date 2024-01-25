@@ -3,7 +3,7 @@ using Dvchevskii.Result.Exceptions;
 
 namespace Dvchevskii.Result
 {
-    internal abstract class Result<T, E> : IResult<T, E>
+    internal abstract partial class Result<T, E> : IResult<T, E>
     {
         public virtual bool IsOk() => false;
 
