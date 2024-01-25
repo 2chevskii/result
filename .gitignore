@@ -1,0 +1,17 @@
+/.idea/
+/.vs/
+/.vscode/
+/_ReSharper.Caches/
+
+bin/
+obj/
+
+TestResults/
+coverage/
+
+/.nuke/temp/
+*.DotSettings.user
+
+.nuget/
+
+/artifacts/
