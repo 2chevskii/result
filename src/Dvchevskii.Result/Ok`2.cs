@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Dvchevskii.Result
 {
@@ -10,27 +11,14 @@ namespace Dvchevskii.Result
 
         internal static IResult<T, E> Create(T value) => new Ok<T, E>(value);
 
-        public override bool IsOk() => true;
+        public override ResultState State() => ResultState.Ok;
 
         public override T UnwrapUnchecked() => value;
 
         public override E UnwrapErrUnchecked() => (E)(object)value;
 
-        /*public override bool Equals(T other)
-        {
-            if (value == null && other == null)
-            {
-                return true;
-            }
+        public override string ToString() =>
+            $"Result<{typeof(T).Name}={UnwrapUnchecked()?.ToString() ?? "null"}, {typeof(E).Name}>";
 
-            if (other is IEquatable<T> eq)
-            {
-                return eq.Equals(Unwrap());
-            }
-
-            return other.Equals(Unwrap());
-        }
-
-        public override bool Equals(E other) => false;*/
     }
 }

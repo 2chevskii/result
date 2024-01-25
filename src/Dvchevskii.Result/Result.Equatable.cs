@@ -4,33 +4,27 @@ namespace Dvchevskii.Result
 {
     internal abstract partial class Result<T, E>
     {
-        /*public static bool operator ==(Result<T, E> lhs, Result<T, E> rhs)
-        {
-            return lhs.Equals(rhs);
-        }
+        private const int HASHCODE_MULT_CONST = 6689;
 
-        public static bool operator !=(Result<T, E> lhs, Result<T, E> rhs)
+        public override bool Equals(object obj)
         {
-            return lhs.Equals(rhs);
-        }
-
-        public bool Equals(IResult other)
-        {
-            if (other is null)
+            if (obj is ResultState state)
             {
-                return false;
+                return HasState(state);
             }
 
-            return other.IsOk() == this.IsOk();
+            if (obj is IResult<T, E> result)
+            {
+                return Equals(result);
+            }
+
+            return false;
         }
+
+        public bool Equals(ResultState state) => HasState(state);
 
         public bool Equals(IResult<T, E> other)
         {
-            if (!Equals((IResult)other))
-            {
-                return false;
-            }
-
             if (other == null)
             {
                 return false;
@@ -38,13 +32,50 @@ namespace Dvchevskii.Result
 
             if (IsOk())
             {
-                return Equals(other.Unwrap());
+                if (other.IsErr())
+                {
+                    return false;
+                }
+
+                T selfValue = UnwrapUnchecked();
+
+                if (selfValue == null)
+                {
+                    return other.UnwrapUnchecked() == null;
+                }
+
+                if (selfValue is IEquatable<T> selfEq)
+                {
+                    return selfEq.Equals(other.UnwrapUnchecked());
+                }
+
+                return selfValue.Equals(other.UnwrapUnchecked());
             }
 
-            return Equals(other.UnwrapErr());
+            if (other.IsOk())
+            {
+                return false;
+            }
+
+            E selfErr = UnwrapErrUnchecked();
+
+            if (selfErr == null)
+            {
+                return other.UnwrapErrUnchecked() == null;
+            }
+
+            if (selfErr is IEquatable<E> selfErrEq)
+            {
+                return selfErrEq.Equals(other.UnwrapErrUnchecked());
+            }
+
+            return selfErr.Equals(other.UnwrapErrUnchecked());
         }
 
-        public abstract bool Equals(T other);
-        public abstract bool Equals(E other);*/
+        public override int GetHashCode() =>
+            MapOrElse(
+                val => unchecked(val.GetHashCode() * HASHCODE_MULT_CONST),
+                e => unchecked(e.GetHashCode() * HASHCODE_MULT_CONST)
+            );
     }
 }

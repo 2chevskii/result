@@ -5,9 +5,19 @@ namespace Dvchevskii.Result
 {
     internal abstract partial class Result<T, E> : IResult<T, E>
     {
-        public virtual bool IsOk() => false;
+        public virtual bool IsOk() => State() == ResultState.Ok;
 
-        public virtual bool IsErr() => false;
+        public virtual bool IsErr() => State() == ResultState.Err;
+
+        public virtual bool HasState(ResultState state) => State() == state;
+
+        public byte NumericState() => (byte)State();
+
+        public abstract ResultState State();
+
+        public Type GetUnderlyingOkType() => typeof(T);
+
+        public Type GetUnderlyingErrType() => typeof(E);
 
         public bool IsOkAnd(Predicate<T> predicate) => IsOk() && predicate(UnwrapUnchecked());
 

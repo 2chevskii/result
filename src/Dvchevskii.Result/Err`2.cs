@@ -11,27 +11,13 @@ namespace Dvchevskii.Result
 
         internal static IResult<T, E> Create(E error) => new Err<T, E>(error);
 
-        public override bool IsErr() => true;
+        public override ResultState State() => ResultState.Err;
 
         public override T UnwrapUnchecked() => (T)(object)error;
 
         public override E UnwrapErrUnchecked() => error;
 
-        /*public override bool Equals(T other) => false;
-
-        public override bool Equals(E other)
-        {
-            if (error == null && other == null)
-            {
-                return true;
-            }
-
-            if (other is IEquatable<E> eq)
-            {
-                return eq.Equals(UnwrapErr());
-            }
-
-            return other.Equals(UnwrapErr());
-        }*/
+        public override string ToString() =>
+            $"Result<{typeof(T).Name}, {typeof(E).Name}={UnwrapErrUnchecked()?.ToString() ?? "null"}>";
     }
 }
