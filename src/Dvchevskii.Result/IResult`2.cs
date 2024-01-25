@@ -2,7 +2,7 @@
 
 namespace Dvchevskii.Result
 {
-    public interface IResult<T, E> : IResult
+    public interface IResult<T, E> : IResult, IEquatable<IResult<T, E>>, IComparable<IResult<T, E>>
     {
         bool IsOkAnd(Predicate<T> predicate);
         bool IsErrAnd(Predicate<E> predicate);
