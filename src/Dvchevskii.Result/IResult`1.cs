@@ -2,5 +2,5 @@
 
 namespace Dvchevskii.Result
 {
-    public interface IResult<T> : IResult<T, Exception> { }
+    // public interface IResult<T> : IResult<T, Exception> { }
 }

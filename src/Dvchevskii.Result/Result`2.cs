@@ -3,18 +3,8 @@ using Dvchevskii.Result.Exceptions;
 
 namespace Dvchevskii.Result
 {
-    internal abstract partial class Result<T, E> : IResult<T, E>
+    public abstract partial class Result<T, E> : Result
     {
-        public virtual bool IsOk() => State() == ResultState.Ok;
-
-        public virtual bool IsErr() => State() == ResultState.Err;
-
-        public virtual bool HasState(ResultState state) => State() == state;
-
-        public byte NumericState() => (byte)State();
-
-        public abstract ResultState State();
-
         public Type GetUnderlyingOkType() => typeof(T);
 
         public Type GetUnderlyingErrType() => typeof(E);
@@ -23,10 +13,10 @@ namespace Dvchevskii.Result
 
         public bool IsErrAnd(Predicate<E> predicate) => IsErr() && predicate(UnwrapErrUnchecked());
 
-        public IResult<U, E> Map<U>(Func<T, U> mapper) =>
+        public Result<U, E> Map<U>(Func<T, U> mapper) =>
             IsOk()
-                ? Ok<U, E>.Create(mapper(UnwrapUnchecked()))
-                : Err<U, E>.Create(UnwrapErrUnchecked());
+                ? new Ok<U, E>(mapper(UnwrapUnchecked()))
+                : (Result<U, E>)new Err<U, E>(UnwrapErrUnchecked());
 
         public U MapOr<U>(Func<T, U> mapper, U defaultValue) =>
             IsOk() ? mapper(UnwrapUnchecked()) : defaultValue;
@@ -34,12 +24,12 @@ namespace Dvchevskii.Result
         public U MapOrElse<U>(Func<T, U> mapper, Func<E, U> elseMapper) =>
             IsOk() ? mapper(UnwrapUnchecked()) : elseMapper(UnwrapErrUnchecked());
 
-        public IResult<T, F> MapErr<F>(Func<E, F> errMapper) =>
+        public Result<T, F> MapErr<F>(Func<E, F> errMapper) =>
             IsErr()
-                ? Err<T, F>.Create(errMapper(UnwrapErrUnchecked()))
-                : Ok<T, F>.Create(UnwrapUnchecked());
+                ? new Err<T, F>(errMapper(UnwrapErrUnchecked()))
+                : (Result<T, F>)new Ok<T, F>(UnwrapUnchecked());
 
-        public IResult<T, E> Inspect(Action<T> inspector)
+        public Result<T, E> Inspect(Action<T> inspector)
         {
             if (IsOk())
             {
@@ -49,7 +39,7 @@ namespace Dvchevskii.Result
             return this;
         }
 
-        public IResult<T, E> InspectErr(Action<E> inspector)
+        public Result<T, E> InspectErr(Action<E> inspector)
         {
             if (IsErr())
             {
@@ -79,15 +69,16 @@ namespace Dvchevskii.Result
 
         public E UnwrapErr() => ExpectErr("Result was not in Err state");
 
-        public IResult<U, E> And<U>(IResult<U, E> result) =>
-            MapOrElse(_ => result, Err<U, E>.Create);
+        public Result<U, E> And<U>(Result<U, E> result) =>
+            MapOrElse(_ => result, e => new Err<U, E>(e));
 
-        public IResult<U, E> AndThen<U>(Func<T, IResult<U, E>> factory) =>
-            MapOrElse(factory, Err<U, E>.Create);
+        public Result<U, E> AndThen<U>(Func<T, Result<U, E>> factory) =>
+            MapOrElse(factory, e => new Err<U, E>(e));
 
-        public IResult<T, F> Or<F>(IResult<T, F> result) => MapOrElse(Ok<T, F>.Create, _ => result);
+        public Result<T, F> Or<F>(Result<T, F> result) =>
+            MapOrElse(v => new Ok<T, F>(v), _ => result);
 
-        public IResult<T, F> OrElse<F>(Func<E, IResult<T, F>> factory) =>
-            MapOrElse(Ok<T, F>.Create, factory);
+        public Result<T, F> OrElse<F>(Func<E, Result<T, F>> factory) =>
+            MapOrElse(v => new Ok<T, F>(v), factory);
     }
 }

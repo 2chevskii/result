@@ -2,11 +2,9 @@ using System;
 
 namespace Dvchevskii.Result
 {
-    internal abstract partial class Result<T, E>
+    public abstract partial class Result<T, E> : IComparable<Result<T, E>>
     {
-        public int CompareTo(ResultState other) => NumericState().CompareTo((byte)other);
-
-        public int CompareTo(IResult<T, E> other)
+        public int CompareTo(Result<T, E> other)
         {
             if (other == null)
             {
