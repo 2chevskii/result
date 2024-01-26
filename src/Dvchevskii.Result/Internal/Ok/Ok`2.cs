@@ -9,7 +9,7 @@ namespace Dvchevskii.Result
 
         public T Value => value;
 
-        internal Ok(T value) => this.value = value;
+        public Ok(T value) => this.value = value;
 
         public override ResultState State() => ResultState.Ok;
 

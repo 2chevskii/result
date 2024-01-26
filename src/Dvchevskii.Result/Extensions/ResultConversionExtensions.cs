@@ -2,15 +2,6 @@
 
 namespace Dvchevskii.Result
 {
-    public static class ResultExtensions
-    {
-        public static U Match<T, E, U>(
-            this Result<T, E> result,
-            Func<T, U> mapOk,
-            Func<E, U> mapErr
-        ) => result.MapOrElse(mapOk, mapErr);
-    }
-
     public static class ResultConversionExtensions
     {
         public static Result<T, E> AsOk<T, E>(this T self) => Result.Ok<T, E>(self);

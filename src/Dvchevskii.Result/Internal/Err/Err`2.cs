@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace Dvchevskii.Result
+﻿namespace Dvchevskii.Result
 {
     internal class Err<T, E> : Result<T, E>, IErr, IErr<E>
     {
@@ -9,7 +6,7 @@ namespace Dvchevskii.Result
 
         public E Error => error;
 
-        internal Err(E error) => this.error = error;
+        public Err(E error) => this.error = error;
 
         public override ResultState State() => ResultState.Err;
 
