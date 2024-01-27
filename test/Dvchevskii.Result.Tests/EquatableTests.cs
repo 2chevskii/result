@@ -5,8 +5,8 @@ namespace Dvchevskii.Result.Tests;
 [TestClass]
 public class EquatableTests
 {
-    private IResult<int, Exception> okResult;
-    private IResult<int, Exception> errResult;
+    private Result<int, Exception> okResult;
+    private Result<int, Exception> errResult;
 
     [TestInitialize]
     public void Initialize()

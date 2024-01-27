@@ -3,13 +3,13 @@ using System.Reflection;
 
 namespace Dvchevskii.Result
 {
-    internal class Ok<T, E> : Result<T, E>, IOk
+    internal class Ok<T, E> : Result<T, E>, IOk, IOk<T>
     {
-        protected T value;
+        private T value;
 
-        protected Ok(T value) => this.value = value;
+        public T Value => value;
 
-        internal static IResult<T, E> Create(T value) => new Ok<T, E>(value);
+        public Ok(T value) => this.value = value;
 
         public override ResultState State() => ResultState.Ok;
 
@@ -19,6 +19,5 @@ namespace Dvchevskii.Result
 
         public override string ToString() =>
             $"Result<{typeof(T).Name}={UnwrapUnchecked()?.ToString() ?? "null"}, {typeof(E).Name}>";
-
     }
 }

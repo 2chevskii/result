@@ -1,15 +1,12 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace Dvchevskii.Result
+﻿namespace Dvchevskii.Result
 {
-    internal class Err<T, E> : Result<T, E>, IErr
+    internal class Err<T, E> : Result<T, E>, IErr, IErr<E>
     {
-        protected E error;
+        private E error;
 
-        protected Err(E error) => this.error = error;
+        public E Error => error;
 
-        internal static IResult<T, E> Create(E error) => new Err<T, E>(error);
+        public Err(E error) => this.error = error;
 
         public override ResultState State() => ResultState.Err;
 

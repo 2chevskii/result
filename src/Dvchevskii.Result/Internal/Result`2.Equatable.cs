@@ -2,7 +2,7 @@ using System;
 
 namespace Dvchevskii.Result
 {
-    internal abstract partial class Result<T, E>
+    public abstract partial class Result<T, E> : IEquatable<Result<T, E>>
     {
         private const int HASHCODE_MULT_CONST = 6689;
 
@@ -10,10 +10,10 @@ namespace Dvchevskii.Result
         {
             if (obj is ResultState state)
             {
-                return HasState(state);
+                return Is(state);
             }
 
-            if (obj is IResult<T, E> result)
+            if (obj is Result<T, E> result)
             {
                 return Equals(result);
             }
@@ -21,9 +21,7 @@ namespace Dvchevskii.Result
             return false;
         }
 
-        public bool Equals(ResultState state) => HasState(state);
-
-        public bool Equals(IResult<T, E> other)
+        public bool Equals(Result<T, E> other)
         {
             if (other == null)
             {

@@ -1,27 +1,21 @@
 ﻿using System;
+using Dvchevskii.Result.Exceptions;
 
 namespace Dvchevskii.Result
 {
-    public interface IResult<T, E> : IResult, IEquatable<IResult<T, E>>, IComparable<IResult<T, E>>
+    public abstract partial class Result<T, E>
     {
-        bool IsOkAnd(Predicate<T> predicate);
-        bool IsErrAnd(Predicate<E> predicate);
+        public T Expect(string message) =>
+            IsOk() ? UnwrapUnchecked() : throw new UnexpectedResultException(message);
 
-        /*ok->Option*/
-        /*err->Option*/
+        public T Unwrap() => Expect("Result was not in Ok state");
 
-        IResult<U, E> Map<U>(Func<T, U> mapper);
-        U MapOr<U>(Func<T, U> mapper, U defaultValue);
-        U MapOrElse<U>(Func<T, U> mapper, Func<E, U> elseMapper);
-        IResult<T, F> MapErr<F>(Func<E, F> errMapper);
-        IResult<T, E> Inspect(Action<T> inspector);
-        IResult<T, E> InspectErr(Action<E> inspector);
+        public T UnwrapOrDefault() => UnwrapOrElse(_ => default(T));
 
-        T Expect(string message);
-        T Unwrap();
-        T UnwrapOrDefault();
-        T UnwrapOr(T defaultValue);
-        T UnwrapOrElse(Func<E, T> defaultValueFactory);
+        public T UnwrapOr(T defaultValue) => IsOk() ? UnwrapUnchecked() : defaultValue;
+
+        public T UnwrapOrElse(Func<E, T> defaultValueFactory) =>
+            IsOk() ? UnwrapUnchecked() : defaultValueFactory(UnwrapErrUnchecked());
 
         /// <summary>
         /// Directly casts held value into the Ok variant's type and returns it.
@@ -38,11 +32,7 @@ namespace Dvchevskii.Result
         /// <returns>
         /// Unwrapped held value
         /// </returns>
-        T UnwrapUnchecked();
-
-        E ExpectErr(string message);
-        E UnwrapErr();
-
+        public abstract T UnwrapUnchecked();
         /// <summary>
         /// Directly casts held value into the Err variant's type and returns it.
         /// This is meant to be used in the situation that you know that the Result is in Err state.
@@ -58,12 +48,11 @@ namespace Dvchevskii.Result
         /// <returns>
         /// Unwrapped held value
         /// </returns>
-        E UnwrapErrUnchecked();
+        public abstract E UnwrapErrUnchecked();
 
-        IResult<U, E> And<U>(IResult<U, E> result);
-        IResult<U, E> AndThen<U>(Func<T, IResult<U, E>> factory);
+        public E ExpectErr(string message) =>
+            IsErr() ? UnwrapErrUnchecked() : throw new UnexpectedResultException(message);
 
-        IResult<T, F> Or<F>(IResult<T, F> result);
-        IResult<T, F> OrElse<F>(Func<E, IResult<T, F>> factory);
+        public E UnwrapErr() => ExpectErr("Result was not in Err state");
     }
 }

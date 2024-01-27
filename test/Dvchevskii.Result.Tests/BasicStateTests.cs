@@ -5,8 +5,8 @@ namespace Dvchevskii.Result.Tests;
 [TestClass]
 public class BasicStateTests
 {
-    private IResult[] okStateSubjects;
-    private IResult[] errStateSubjects;
+    private Result[] okStateSubjects;
+    private Result[] errStateSubjects;
 
     [TestInitialize]
     public void Initialize()
