@@ -2,7 +2,7 @@
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
-interface ICompile : IRestore, IHazVersion, IHazConfiguration
+interface ICompile : IRestore, IHazVersion, IHazConfiguration, IHazArtifacts
 {
     Target CompileMain =>
         _ =>
