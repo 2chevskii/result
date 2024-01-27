@@ -14,12 +14,15 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Dvchevskii.Result.Optional\Dvchevskii.Result.Optional.csproj" />
-    <ProjectReference Include="..\..\src\Dvchevskii.Result\Dvchevskii.Result.csproj" />
+    <ProjectReference
+      Include="..\..\src\Dvchevskii.Result.Optional\Dvchevskii.Result.Optional.csproj" />
   </ItemGroup>
 
 </Project>

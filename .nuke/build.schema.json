@@ -9,6 +9,7 @@
         "Configuration": {
           "type": "string",
           "enum": [
+            "All",
             "Debug",
             "Release"
           ]
@@ -42,6 +43,9 @@
             "VSCode"
           ]
         },
+        "HtmlTestResults": {
+          "type": "boolean"
+        },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
@@ -71,10 +75,23 @@
           "items": {
             "type": "string",
             "enum": [
+              "Clean",
+              "CleanArtifacts",
+              "CleanProjects",
+              "CollectCoverage",
               "Compile",
               "CompileMain",
               "CompileTests",
+              "Coverage",
+              "Docs",
+              "DocsClean",
+              "DocsCompile",
+              "DocsGzip",
+              "DocsPreview",
+              "Pack",
+              "ReportCoverage",
               "Restore",
+              "RestoreTools",
               "Test"
             ]
           }
@@ -89,10 +106,23 @@
           "items": {
             "type": "string",
             "enum": [
+              "Clean",
+              "CleanArtifacts",
+              "CleanProjects",
+              "CollectCoverage",
               "Compile",
               "CompileMain",
               "CompileTests",
+              "Coverage",
+              "Docs",
+              "DocsClean",
+              "DocsCompile",
+              "DocsGzip",
+              "DocsPreview",
+              "Pack",
+              "ReportCoverage",
               "Restore",
+              "RestoreTools",
               "Test"
             ]
           }
