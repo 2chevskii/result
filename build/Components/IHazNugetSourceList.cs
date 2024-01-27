@@ -17,7 +17,7 @@ interface IHazNugetSourceList
     public struct NugetSource
     {
         [CanBeNull]
-        static IEnumerable<NugetSource> _sources;
+        static IEnumerable<NugetSource> Sources;
 
         static readonly Regex NameEnabledRegex = new Regex(
             @"\d+\.\s*([a-zA-Z0-9_\.-]+)\s+\[(Enabled|Disabled)\]"
@@ -29,26 +29,27 @@ interface IHazNugetSourceList
 
         public static IEnumerable<NugetSource> GetSources()
         {
-            if (_sources == null)
-                _sources = ParseAll(
+            if (Sources == null)
+                Sources = ParseAll(
                     DotNetTasks.DotNet("nuget list source --format detailed").Skip(1).ToList()
                 );
 
-            return _sources;
+            return Sources;
         }
 
         public static NugetSource Parse(IEnumerable<Output> lines)
         {
-            var firstLine = lines.First().Text;
-            var nameEnabledMatch = NameEnabledRegex.Match(firstLine);
-            var name = nameEnabledMatch.Groups[1].Value;
+            IEnumerable<Output> enumerable = lines as Output[] ?? lines.ToArray();
+            string firstLine = enumerable.First().Text;
+            Match nameEnabledMatch = NameEnabledRegex.Match(firstLine);
+            string name = nameEnabledMatch.Groups[1].Value;
 
-            var enabledString = nameEnabledMatch.Groups[2].Value;
+            string enabledString = nameEnabledMatch.Groups[2].Value;
 
             Log.Information("Enabled string: {Str}", enabledString);
 
-            var isEnabled = ParseEnabled(enabledString);
-            var uri = lines.Skip(1).First().Text.Trim();
+            bool isEnabled = ParseEnabled(enabledString);
+            string uri = enumerable.Skip(1).First().Text.Trim();
 
             return new NugetSource
             {
@@ -62,9 +63,9 @@ interface IHazNugetSourceList
         {
             for (int i = 0; i < lines.Count; i += 2)
             {
-                var thisLine = lines[i];
-                var nextLine = lines[i + 1];
-                var source = Parse([thisLine, nextLine]);
+                Output thisLine = lines[i];
+                Output nextLine = lines[i + 1];
+                NugetSource source = Parse([thisLine, nextLine]);
                 yield return source;
             }
         }
@@ -74,7 +75,8 @@ interface IHazNugetSourceList
             return str switch
             {
                 "Enabled" or "E" => true,
-                "Disabled" or "D" => false
+                "Disabled" or "D" => false,
+                _ => throw new Exception()
             };
         }
     }

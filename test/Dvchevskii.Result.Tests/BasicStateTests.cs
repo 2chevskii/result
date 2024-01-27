@@ -1,24 +1,25 @@
 using FluentAssertions;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 namespace Dvchevskii.Result.Tests;
 
 [TestClass]
 public class BasicStateTests
 {
-    private Result[] okStateSubjects;
-    private Result[] errStateSubjects;
+    private Result[] _okStateSubjects;
+    private Result[] _errStateSubjects;
 
     [TestInitialize]
     public void Initialize()
     {
-        okStateSubjects =
+        _okStateSubjects =
         [
             Result.Ok(0),
             Result.Ok<int, IndexOutOfRangeException>(42),
             Result.Ok("__testString__"),
             Result.Ok(new Exception("__test__"))
         ];
-        errStateSubjects =
+        _errStateSubjects =
         [
             Result.Err<int>(new Exception("__testString__")),
             Result.Err<int, int>(42),
@@ -29,14 +30,14 @@ public class BasicStateTests
     [TestMethod]
     public void Test_IsOk()
     {
-        okStateSubjects.Should().OnlyContain(r => r.IsOk());
-        errStateSubjects.Should().OnlyContain(r => r.IsOk() == false);
+        _okStateSubjects.Should().OnlyContain(r => r.IsOk());
+        _errStateSubjects.Should().OnlyContain(r => r.IsOk() == false);
     }
 
     [TestMethod]
     public void Test_IsErr()
     {
-        okStateSubjects.Should().OnlyContain(r => r.IsErr() == false);
-        errStateSubjects.Should().OnlyContain(r => r.IsErr());
+        _okStateSubjects.Should().OnlyContain(r => r.IsErr() == false);
+        _errStateSubjects.Should().OnlyContain(r => r.IsErr());
     }
 }

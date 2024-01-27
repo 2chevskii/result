@@ -17,7 +17,7 @@ public class ResultExtensionsTests
     public void Test_Err()
     {
         Result.Ok(42).Err().Should().Be(Option.None<Exception>());
-        var ex = new Exception();
+        Exception ex = new Exception();
         Result.Err<int>(ex).Err().Should().Be(Option.Some(ex));
     }
 

@@ -10,7 +10,7 @@ interface IDocs : IHazSlnFiles, IHazArtifacts, IRestore
 {
     AbsolutePath DocsDirectory => RootDirectory / "docs";
     AbsolutePath DocfxConfig => DocsDirectory / "docfx.json";
-    AbsolutePath DocsOutputDirectory => DocsDirectory / "dist";
+    // AbsolutePath DocsOutputDirectory => DocsDirectory / "dist";
     AbsolutePath DocsArtifactPath => ArtifactsDirectory / "docs/github-pages.tar";
 
     Target Docs => _ => _.DependsOn(DocsCompile, DocsGzip);
