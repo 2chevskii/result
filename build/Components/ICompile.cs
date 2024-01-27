@@ -10,7 +10,12 @@ interface ICompile : IRestore, IHazVersion, IHazConfiguration
                 .Executes(
                     () =>
                         DotNetTasks.DotNetBuild(settings =>
-                            settings.Apply(BuildSettingsBase).SetProjectFile(MainProject)
+                            settings
+                                .Apply(BuildSettingsBase)
+                                .CombineWith(
+                                    MainProjects,
+                                    (settings, project) => settings.SetProjectFile(project)
+                                )
                         )
                 );
 
@@ -20,7 +25,12 @@ interface ICompile : IRestore, IHazVersion, IHazConfiguration
                 .Executes(
                     () =>
                         DotNetTasks.DotNetBuild(settings =>
-                            settings.Apply(BuildSettingsBase).SetProjectFile(TestsProject)
+                            settings
+                                .Apply(BuildSettingsBase)
+                                .CombineWith(
+                                    TestProjects,
+                                    (settings, project) => settings.SetProjectFile(project)
+                                )
                         )
                 );
 

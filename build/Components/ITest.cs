@@ -10,7 +10,12 @@ interface ITest : ICompile
                 .Executes(
                     () =>
                         DotNetTasks.DotNetTest(settings =>
-                            settings.Apply(TestSettingsBase).SetProjectFile(TestsProject)
+                            settings
+                                .Apply(TestSettingsBase)
+                                .CombineWith(
+                                    TestProjects,
+                                    (settings, project) => settings.SetProjectFile(project)
+                                )
                         )
                 );
 

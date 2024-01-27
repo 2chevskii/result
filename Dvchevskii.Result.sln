@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EBB5C275-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Tests", "test\Dvchevskii.Result.Tests\Dvchevskii.Result.Tests.csproj", "{B18CBF43-FB09-4776-B0BA-FE22C8F2B844}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Optional", "src\Dvchevskii.Result.Optional\Dvchevskii.Result.Optional.csproj", "{E4054BB6-3B95-4410-814A-A621A9936C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Optional.Tests", "test\Dvchevskii.Result.Optional.Tests\Dvchevskii.Result.Optional.Tests.csproj", "{211332FC-A77B-45F6-9E95-AE5768FF9759}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,14 @@ Global
 		{B18CBF43-FB09-4776-B0BA-FE22C8F2B844}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B18CBF43-FB09-4776-B0BA-FE22C8F2B844}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B18CBF43-FB09-4776-B0BA-FE22C8F2B844}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4054BB6-3B95-4410-814A-A621A9936C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4054BB6-3B95-4410-814A-A621A9936C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4054BB6-3B95-4410-814A-A621A9936C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4054BB6-3B95-4410-814A-A621A9936C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{211332FC-A77B-45F6-9E95-AE5768FF9759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{211332FC-A77B-45F6-9E95-AE5768FF9759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{211332FC-A77B-45F6-9E95-AE5768FF9759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{211332FC-A77B-45F6-9E95-AE5768FF9759}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,5 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{740EED7F-C84C-46FE-89E3-5F0EFC36B874} = {1A69C61B-3090-43F2-B9DB-A54484C73874}
 		{B18CBF43-FB09-4776-B0BA-FE22C8F2B844} = {EBB5C275-1A1B-46B5-96D0-8E6DE8401F5C}
+		{E4054BB6-3B95-4410-814A-A621A9936C89} = {1A69C61B-3090-43F2-B9DB-A54484C73874}
+		{211332FC-A77B-45F6-9E95-AE5768FF9759} = {EBB5C275-1A1B-46B5-96D0-8E6DE8401F5C}
 	EndGlobalSection
 EndGlobal
