@@ -112,4 +112,19 @@ export default [
       },
     ],
   },
+  {
+    type: 'namespace',
+    name: 'Dvchevskii.Result.Extensions.Optional',
+    members: [
+      {
+        type: 'class',
+        name: 'ResultExtensions',
+        members: [
+          'Ok<T, E>(Result<T, E>)',
+          'Err<T, E>(Result<T, E>)',
+          'Transpose<T, E>(Result<Option<T>, E>)',
+        ]
+      }
+    ]
+  }
 ];
