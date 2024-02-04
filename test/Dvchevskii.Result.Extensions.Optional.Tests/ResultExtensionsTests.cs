@@ -1,7 +1,7 @@
 ﻿using Dvchevskii.Optional;
 using FluentAssertions;
 
-namespace Dvchevskii.Result.Optional.Tests;
+namespace Dvchevskii.Result.Extensions.Optional.Tests;
 
 [TestClass]
 public class ResultExtensionsTests

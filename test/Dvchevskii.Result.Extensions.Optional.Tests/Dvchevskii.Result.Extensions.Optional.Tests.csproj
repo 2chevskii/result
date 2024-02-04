@@ -21,8 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference
-      Include="..\..\src\Dvchevskii.Result.Optional\Dvchevskii.Result.Optional.csproj" />
+    <ProjectReference Include="..\..\src\Dvchevskii.Result.Extensions.Optional\Dvchevskii.Result.Extensions.Optional.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using Dvchevskii.Optional;
-using Dvchevskii.Result.Extensions;
 
-namespace Dvchevskii.Result.Optional
+namespace Dvchevskii.Result.Extensions.Optional
 {
     public static class ResultExtensions
     {

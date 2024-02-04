@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EBB5C275-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Tests", "test\Dvchevskii.Result.Tests\Dvchevskii.Result.Tests.csproj", "{B18CBF43-FB09-4776-B0BA-FE22C8F2B844}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Optional", "src\Dvchevskii.Result.Optional\Dvchevskii.Result.Optional.csproj", "{E4054BB6-3B95-4410-814A-A621A9936C89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Extensions.Optional", "src\Dvchevskii.Result.Extensions.Optional\Dvchevskii.Result.Extensions.Optional.csproj", "{E4054BB6-3B95-4410-814A-A621A9936C89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Optional.Tests", "test\Dvchevskii.Result.Optional.Tests\Dvchevskii.Result.Optional.Tests.csproj", "{211332FC-A77B-45F6-9E95-AE5768FF9759}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dvchevskii.Result.Extensions.Optional.Tests", "test\Dvchevskii.Result.Extensions.Optional.Tests\Dvchevskii.Result.Extensions.Optional.Tests.csproj", "{211332FC-A77B-45F6-9E95-AE5768FF9759}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
