@@ -4,12 +4,12 @@
     {
         public abstract ResultState State();
 
-        public virtual bool IsOk() => Is(ResultState.Ok);
+        public bool IsOk() => Is(ResultState.Ok);
 
-        public virtual bool IsErr() => Is(ResultState.Err);
+        public bool IsErr() => Is(ResultState.Err);
 
-        public virtual bool Is(ResultState state) => State() == state;
+        public bool Is(ResultState state) => State() == state;
 
-        public virtual byte NumericState() => (byte)State();
+        public byte NumericState() => (byte)State();
     }
 }

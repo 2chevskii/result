@@ -7,13 +7,16 @@ interface IHazArtifacts : INukeBuild
     AbsolutePath PackagesDirectory => ArtifactsDirectory / "pkg";
     AbsolutePath LibrariesDirectory => ArtifactsDirectory / "lib";
     AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test_results";
-    AbsolutePath DocsOutputDirectory => ArtifactsDirectory / "docs";
+    AbsolutePath CoverageDirectory => TestResultsDirectory / "coverage";
+    AbsolutePath DocsArtifactsDirectory => ArtifactsDirectory / "docs";
 
     void InitializeArtifactsDirectories()
     {
         ArtifactsDirectory.CreateDirectory();
         PackagesDirectory.CreateDirectory();
         LibrariesDirectory.CreateDirectory();
-        DocsOutputDirectory.CreateDirectory();
+        DocsArtifactsDirectory.CreateDirectory();
+        TestResultsDirectory.CreateDirectory();
+        CoverageDirectory.CreateDirectory();
     }
 }

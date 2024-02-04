@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-
-namespace Dvchevskii.Result
+﻿namespace Dvchevskii.Result
 {
     internal class Ok<T, E> : Result<T, E>, IOk, IOk<T>
     {

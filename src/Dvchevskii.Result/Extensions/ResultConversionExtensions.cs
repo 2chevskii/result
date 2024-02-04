@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Dvchevskii.Result
+namespace Dvchevskii.Result.Extensions
 {
     public static class ResultConversionExtensions
     {

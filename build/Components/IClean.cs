@@ -11,7 +11,7 @@ interface IClean : ITest
         [
             PackagesDirectory,
             LibrariesDirectory,
-            DocsOutputDirectory,
+            DocsArtifactDirectory,
             TestResultsDirectory,
             CoverageDirectory
         ];

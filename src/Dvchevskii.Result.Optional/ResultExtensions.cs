@@ -1,4 +1,5 @@
 ﻿using Dvchevskii.Optional;
+using Dvchevskii.Result.Extensions;
 
 namespace Dvchevskii.Result.Optional
 {
@@ -11,7 +12,7 @@ namespace Dvchevskii.Result.Optional
             self.MapOrElse(_ => Option.None<E>(), Option.Some);
 
         /// <summary>
-        /// Transposes a <see cref="IResult"/> on an <see cref="Option"/> to an <see cref="Option"/> of a <see cref="IResult"/>
+        /// Transposes a <see cref="Result{T,E}"/> on an <see cref="Option{T}"/> to an <see cref="Option{T}"/> of a <see cref="Result{T,E}"/>
         /// </summary>
         /// <param name="self"></param>
         /// <typeparam name="T"></typeparam>

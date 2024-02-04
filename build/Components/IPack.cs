@@ -1,4 +1,5 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
 interface IPack : ICompile
@@ -14,6 +15,10 @@ interface IPack : ICompile
                                 .SetVersion(Version.SemVer)
                                 .SetOutputDirectory(PackagesDirectory)
                                 .SetConfiguration(Configuration)
+                                .CombineWith(
+                                    MainProjects,
+                                    (settings, project) => settings.SetProject(project)
+                                )
                         )
                 );
 }
