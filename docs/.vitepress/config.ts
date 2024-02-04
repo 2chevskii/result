@@ -19,6 +19,10 @@ export default defineConfig({
   title: "Dvchevskii.Result",
   description: "Dvchevskii.Result Documentation",
   base: "/result/",
+  assetsDir: "public",
+  appearance: "force-dark",
+  lang: "en-US",
+  head: [["link", { rel: "icon", href: "/result/favicon.ico" }]],
   themeConfig: {
     nav: [
       { text: "Guide", link: "/guide/installation" },
@@ -36,6 +40,19 @@ export default defineConfig({
     ],
 
     sidebar: [
+      {
+        text: "Guide",
+        items: [
+          {
+            text: "Installation",
+            link: "/guide/installation",
+          },
+          {
+            text: "Usage",
+            link: "/guide/usage",
+          },
+        ],
+      },
       {
         text: "API",
         link: "/api/",

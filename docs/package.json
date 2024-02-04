@@ -1,6 +1,7 @@
 {
   "name": "@2chevskii/result-docs",
   "version": "1.0.0",
+  "latestReleaseVersion": "1.0.0",
   "description": "",
   "type": "module",
   "scripts": {
