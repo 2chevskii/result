@@ -1,17 +1,12 @@
 ﻿using System.Collections.Generic;
-using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
 using Nuke.Common.Utilities;
 
-interface IDocs : IHazSlnFiles, IHazArtifacts, IRestore, IHazVersion
+interface IDocs : IHazArtifacts, IRestore, IHazVersion, IHazGitHubRelease
 {
-    [LatestGitHubRelease("2chevskii/result", TrimPrefix = true)]
-    NuGetVersion LatestGitHubReleaseVersion =>
-        NuGetVersion.Parse(TryGetValue<string>(() => LatestGitHubReleaseVersion) ?? "0.0.0");
-
     AbsolutePath DocsDirectory => RootDirectory / "docs";
     AbsolutePath DocsPackageJson => DocsDirectory / "package.json";
     AbsolutePath DocsDistDirectory => DocsDirectory / ".vitepress/dist";

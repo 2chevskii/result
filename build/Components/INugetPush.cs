@@ -7,6 +7,7 @@ using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Utilities;
 using Octokit;
 using FileMode = System.IO.FileMode;
@@ -37,18 +38,24 @@ interface INugetPush : INukeBuild, ICreateGitHubRelease, IControlNuGetSources
         _ =>
             _.Executes(async () =>
             {
-                Release release = await GetOrCreateRelease();
+                long repositoryId = await GetRepositoryId();
+                Release release = await GitHubTasks.GitHubClient.Repository.Release.Get(
+                    repositoryId,
+                    TagName
+                );
 
-                IEnumerable<Task> downloadTasks =
-                    from asset in release.Assets
-                    let name = asset.Name
-                    where name.EndsWith("nupkg")
-                    let path = ArtifactPaths.Packages / name
-                    select HttpTasks.HttpDownloadFileAsync(
-                        asset.BrowserDownloadUrl,
-                        path,
-                        FileMode.CreateNew
-                    );
+                AbsolutePath GetArtifactPath(string artifactName)
+                {
+                    return ArtifactPaths.Packages / artifactName;
+                }
+
+                IEnumerable<Task> downloadTasks = release
+                    .Assets.Where(asset => asset.Name.EndsWith("nupkg"))
+                    .Select(asset =>
+                    {
+                        var path = GetArtifactPath(asset.Name);
+                        return HttpTasks.HttpDownloadFileAsync(asset.BrowserDownloadUrl, path);
+                    });
 
                 await Task.WhenAll(downloadTasks);
             });
