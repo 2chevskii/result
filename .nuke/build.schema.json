@@ -18,7 +18,7 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
-        "CopyLibsOutput": {
+        "CopyLibs": {
           "type": "boolean"
         },
         "Help": {
@@ -85,7 +85,7 @@
               "Compile",
               "CompileMain",
               "CompileTests",
-              "CopyLibrariesToArtifactsDirectory",
+              "CopyLibraryArtifacts",
               "Coverage",
               "Docs",
               "DocsClean",
@@ -119,7 +119,7 @@
               "Compile",
               "CompileMain",
               "CompileTests",
-              "CopyLibrariesToArtifactsDirectory",
+              "CopyLibraryArtifacts",
               "Coverage",
               "Docs",
               "DocsClean",
