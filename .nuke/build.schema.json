@@ -53,6 +53,9 @@
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
         },
+        "NugetFeed": {
+          "type": "string"
+        },
         "Partition": {
           "type": "string",
           "description": "Partition to use on CI"
@@ -87,6 +90,7 @@
               "CompileTests",
               "CopyLibraryArtifacts",
               "Coverage",
+              "CreateGitHubRelease",
               "Docs",
               "DocsClean",
               "DocsCompile",
@@ -94,8 +98,12 @@
               "DocsDev",
               "DocsPreview",
               "DocsRestore",
+              "DownloadReleaseAssets",
+              "EnsureHasNugetFeed",
+              "NugetPush",
               "Pack",
               "PatchDocsPackageJson",
+              "ReadNugetSources",
               "ReportCoverage",
               "Restore",
               "Test"
@@ -121,6 +129,7 @@
               "CompileTests",
               "CopyLibraryArtifacts",
               "Coverage",
+              "CreateGitHubRelease",
               "Docs",
               "DocsClean",
               "DocsCompile",
@@ -128,8 +137,12 @@
               "DocsDev",
               "DocsPreview",
               "DocsRestore",
+              "DownloadReleaseAssets",
+              "EnsureHasNugetFeed",
+              "NugetPush",
               "Pack",
               "PatchDocsPackageJson",
+              "ReadNugetSources",
               "ReportCoverage",
               "Restore",
               "Test"
