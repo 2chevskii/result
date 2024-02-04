@@ -18,7 +18,7 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
-        "CopyLibsOutput": {
+        "CopyLibs": {
           "type": "boolean"
         },
         "Help": {
@@ -85,17 +85,19 @@
               "Compile",
               "CompileMain",
               "CompileTests",
-              "CopyLibrariesToArtifactsDirectory",
+              "CopyLibraryArtifacts",
               "Coverage",
               "Docs",
               "DocsClean",
               "DocsCompile",
-              "DocsGzip",
+              "DocsCopy",
+              "DocsDev",
               "DocsPreview",
+              "DocsRestore",
               "Pack",
+              "PatchDocsPackageJson",
               "ReportCoverage",
               "Restore",
-              "RestoreTools",
               "Test"
             ]
           }
@@ -117,17 +119,19 @@
               "Compile",
               "CompileMain",
               "CompileTests",
-              "CopyLibrariesToArtifactsDirectory",
+              "CopyLibraryArtifacts",
               "Coverage",
               "Docs",
               "DocsClean",
               "DocsCompile",
-              "DocsGzip",
+              "DocsCopy",
+              "DocsDev",
               "DocsPreview",
+              "DocsRestore",
               "Pack",
+              "PatchDocsPackageJson",
               "ReportCoverage",
               "Restore",
-              "RestoreTools",
               "Test"
             ]
           }

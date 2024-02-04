@@ -1,61 +1,92 @@
-﻿using Nuke.Common;
+﻿using System.Collections.Generic;
+using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Serilog;
+using Nuke.Common.Tools.Npm;
+using Nuke.Common.Utilities;
 
-namespace Components;
-
-interface IDocs : IHazSlnFiles, IHazArtifacts, IRestore
+interface IDocs : IHazArtifacts, IRestore, IHazVersion, IHazGitHubRelease
 {
     AbsolutePath DocsDirectory => RootDirectory / "docs";
-    AbsolutePath DocfxConfig => DocsDirectory / "docfx.json";
-    // AbsolutePath DocsOutputDirectory => DocsDirectory / "dist";
-    AbsolutePath DocsArtifactPath => ArtifactsDirectory / "docs/github-pages.tar";
+    AbsolutePath DocsPackageJson => DocsDirectory / "package.json";
+    AbsolutePath DocsDistDirectory => DocsDirectory / ".vitepress/dist";
 
-    Target Docs => _ => _.DependsOn(DocsCompile, DocsGzip);
-
-    Target DocsPreview =>
-        _ =>
-            _.DependsOn(DocsCompile)
-                .Executes(() => DotNetTasks.DotNet($"docfx serve {DocsOutputDirectory}"))
-                .ProceedAfterFailure();
+    Target Docs => _ => _.DependsOn(DocsCompile, DocsCopy);
 
     Target DocsClean =>
         _ =>
             _.Executes(
-                () => DocsOutputDirectory.DeleteDirectory(),
-                () => (DocsDirectory / "api").DeleteDirectory()
+                () => DocsDistDirectory.DeleteDirectory(),
+                () => ArtifactPaths.Docs.CreateOrCleanDirectory()
             );
+
+    Target DocsRestore =>
+        _ =>
+            _.Executes(
+                () =>
+                    NpmTasks.NpmInstall(settings =>
+                        settings.SetProcessWorkingDirectory(DocsDirectory)
+                    )
+            );
+
+    Target PatchDocsPackageJson =>
+        _ =>
+            _.Executes(() =>
+            {
+                Dictionary<string, object> props = DocsPackageJson.ReadJson<
+                    Dictionary<string, object>
+                >();
+                props["version"] = Version.SemVer;
+                props["latestReleaseVersion"] = LatestGitHubReleaseVersion.OriginalVersion;
+                DocsPackageJson.WriteJson(props);
+            });
+
+    Target DocsDev =>
+        _ =>
+            _.DependsOn(DocsRestore, PatchDocsPackageJson)
+                .Executes(
+                    () =>
+                        NpmTasks.NpmRun(settings =>
+                            settings
+                                .SetProcessWorkingDirectory(DocsDirectory)
+                                .SetCommand("docs:dev")
+                        )
+                );
 
     Target DocsCompile =>
         _ =>
-            _.DependsOn(RestoreTools)
-                .Executes(() =>
-                {
-                    Log.Information("Generating documentation website...");
-                    Log.Verbose("Generating metadata files...");
-                    DotNetTasks.DotNet($"docfx metadata {DocfxConfig}");
-                    Log.Verbose("Generating HTML...");
-                    DotNetTasks.DotNet($"docfx build {DocfxConfig}");
-                });
+            _.DependsOn(DocsRestore, PatchDocsPackageJson)
+                .Executes(
+                    () =>
+                        NpmTasks.NpmRun(settings =>
+                            settings
+                                .SetProcessWorkingDirectory(DocsDirectory)
+                                .SetCommand("docs:build")
+                        )
+                );
 
-    Target DocsGzip =>
+    Target DocsPreview =>
         _ =>
             _.DependsOn(DocsCompile)
-                .Executes(() =>
-                {
-                    Log.Information(
-                        "Compressing documentation website files to {ArtifactPath}",
-                        DocsArtifactPath
-                    );
+                .Executes(
+                    () =>
+                        NpmTasks.NpmRun(settings =>
+                            settings
+                                .SetProcessWorkingDirectory(DocsDirectory)
+                                .SetCommand("docs:preview")
+                        )
+                );
 
-                    DocsArtifactPath.Parent.CreateOrCleanDirectory();
-                    // using Stream tarfileStream = File.OpenWrite(DocsArtifactPath);
-                    // TarFile.CreateFromDirectory(DocsOutputDirectory, tarfileStream, false);
-
-                    ProcessTasks.StartShell(
-                        $"tar --dereference --directory {DocsOutputDirectory} -cvf {DocsArtifactPath} ."
-                    );
-                });
+    Target DocsCopy =>
+        _ =>
+            _.DependsOn(DocsCompile)
+                .Executes(
+                    () => ArtifactPaths.Docs.CreateOrCleanDirectory(),
+                    () =>
+                        FileSystemTasks.CopyDirectoryRecursively(
+                            DocsDistDirectory,
+                            ArtifactPaths.Docs,
+                            DirectoryExistsPolicy.Merge
+                        )
+                );
 }

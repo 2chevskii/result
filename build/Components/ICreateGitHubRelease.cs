@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,25 +11,41 @@ using Nuke.Common.Tools.GitHub;
 using Octokit;
 using Serilog;
 using ContentType = Azure.Core.ContentType;
+using FileMode = System.IO.FileMode;
 
 interface ICreateGitHubRelease : IHazVersion, IHazGitRepository, IHazArtifacts
 {
     string ReleaseName => Version.MajorMinorPatch;
     string TagName => $"v{ReleaseName}";
-    string GithubToken => GitHubActions.Instance.Token;
 
     Target CreateGitHubRelease =>
         _ =>
-            _.Requires(() => !string.IsNullOrEmpty(GithubToken))
+            _.Requires(() => !string.IsNullOrEmpty(GitHubActions.Instance.Token))
                 .Requires(() => GitHubActions.Instance.Ref.StartsWith("refs/tags/"))
                 .Executes(async () =>
                 {
-                    Release release = await GetOrCreateRelease();
+                    long repositoryId = await GetRepositoryId();
+                    Log.Information(
+                        "Creating GitHub release (repository id={RepositoryId}, release name={ReleaseName}, tag name={TagName})",
+                        repositoryId,
+                        ReleaseName,
+                        TagName
+                    );
+
+                    Release release = await GitHubTasks.GitHubClient.Repository.Release.Create(
+                        repositoryId,
+                        new NewRelease(TagName)
+                        {
+                            Name = ReleaseName,
+                            Draft = true,
+                            Prerelease = !string.IsNullOrEmpty(Version.PreReleaseLabel),
+                            Body = "# TODO: Write release notes here"
+                        }
+                    );
 
                     IEnumerable<Task> uploadTasks =
-                        from path in AssetPaths
+                        from path in GetPackageAssets().Concat(PrepareAndGetLibraryAssets())
                         let filename = path.Name
-                        where release.Assets.All(asset => asset.Name != filename)
                         let stream = File.OpenRead(path)
                         let assetUpload = new ReleaseAssetUpload
                         {
@@ -38,58 +55,25 @@ interface ICreateGitHubRelease : IHazVersion, IHazGitRepository, IHazArtifacts
                         }
                         select GitHubTasks
                             .GitHubClient.Repository.Release.UploadAsset(release, assetUpload)
-                            .ContinueWith(response => stream.Dispose());
+                            .ContinueWith(task =>
+                            {
+                                Log.Debug("Uploaded release artifact {Filename}", filename);
+                                stream.Dispose();
+                            });
 
                     await Task.WhenAll(uploadTasks);
                 });
 
-    async Task<Release> GetOrCreateRelease()
-    {
-        long repositoryId = await GetRepositoryId();
+    IEnumerable<AbsolutePath> GetPackageAssets() =>
+        ArtifactPaths.Packages.GetFiles("*.nupkg").ToArray();
 
-        Log.Information(
-            "Creating GitHub release (repository id={RepositoryId}, release name={ReleaseName}, tag name={TagName})",
-            repositoryId,
-            ReleaseName,
-            TagName
-        );
-
-        Release release;
-
-        try
+    IEnumerable<AbsolutePath> PrepareAndGetLibraryAssets() =>
+        from dir in ArtifactPaths.Libraries.GetDirectories().ToArray()
+        let tarGzPath = ArtifactPaths.Libraries / dir.Name + ".tar.gz"
+        select new Func<AbsolutePath>(() =>
         {
-            release = await GitHubTasks.GitHubClient.Repository.Release.Create(
-                repositoryId,
-                new NewRelease(TagName)
-                {
-                    Name = ReleaseName,
-                    Draft = true,
-                    Prerelease = !string.IsNullOrEmpty(Version.PreReleaseLabel),
-                }
-            );
-        }
-        catch
-        {
-            release = await GitHubTasks.GitHubClient.Repository.Release.Get(repositoryId, TagName);
-        }
-
-        return release;
-    }
-
-    IEnumerable<AbsolutePath> AssetPaths => PackagesDirectory.GetFiles();
-}
-
-interface IHazGitRepository : INukeBuild
-{
-    [Required]
-    [GitRepository]
-    GitRepository GitRepository => TryGetValue(() => GitRepository);
-
-    Task<long> GetRepositoryId() =>
-        GitHubTasks
-            .GitHubClient.Repository.Get(
-                GitRepository.GetGitHubOwner(),
-                GitRepository.GetGitHubName()
-            )
-            .ContinueWith(response => response.Result.Id);
+            Log.Debug("Compressing archive directory {DirPath} to {TarballPath}", dir, tarGzPath);
+            dir.TarGZipTo(tarGzPath, fileMode: FileMode.Create);
+            return tarGzPath;
+        })();
 }

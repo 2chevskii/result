@@ -1,4 +1,6 @@
 on:
+  release:
+    types: published
   push:
     branches: master
 jobs:
@@ -11,10 +13,9 @@ jobs:
       - name: 🛠️ Generate documentation
         run: ./build.sh docs
       - name: 💾 Upload website dist to artifact storage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
-          path: artifacts/docs/github-pages.tar
+          path: artifacts/docs/
   deploy:
     runs-on: ubuntu-22.04
     needs: build

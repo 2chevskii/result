@@ -1,4 +1,5 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 
 interface IPack : ICompile
@@ -12,8 +13,12 @@ interface IPack : ICompile
                             settings
                                 .EnableNoBuild()
                                 .SetVersion(Version.SemVer)
-                                .SetOutputDirectory(PackagesDirectory)
+                                .SetOutputDirectory(ArtifactPaths.Packages)
                                 .SetConfiguration(Configuration)
+                                .CombineWith(
+                                    MainProjects,
+                                    (settings, project) => settings.SetProject(project)
+                                )
                         )
                 );
 }

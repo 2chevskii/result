@@ -1,39 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitHub;
 using Nuke.Common.Utilities;
 using Octokit;
 using FileMode = System.IO.FileMode;
 
-interface INugetPush : INukeBuild, ICreateGitHubRelease, IHazNugetSourceList
+interface INugetPush : INukeBuild, ICreateGitHubRelease, IControlNuGetSources
 {
     string NugetApiKey => EnvironmentInfo.GetVariable("NUGET_API_KEY");
-
-    [Parameter]
-    Uri NugetFeed => TryGetValue(() => NugetFeed);
-
-    string NugetSourceName => NugetFeed.Host.Split('.').TakeLast(2).Join('.');
-
-    Target EnsureHasNugetSource =>
-        _ =>
-            _.OnlyWhenDynamic(() => !HasNugetSource(NugetSourceName))
-                .Executes(
-                    () =>
-                        DotNetTasks.DotNetNuGetAddSource(settings =>
-                            settings.SetName(NugetSourceName).SetSource(NugetFeed.ToString())
-                        )
-                );
 
     Target NugetPush =>
         _ =>
             _.Requires(() => !string.IsNullOrEmpty(NugetApiKey))
                 .Requires(() => NugetFeed)
-                .DependsOn(EnsureHasNugetSource)
+                .DependsOn(EnsureHasNugetFeed)
                 .Executes(
                     () =>
                         DotNetTasks.DotNetNuGetPush(settings =>
@@ -41,7 +28,7 @@ interface INugetPush : INukeBuild, ICreateGitHubRelease, IHazNugetSourceList
                                 .SetSource(NugetSourceName)
                                 .SetApiKey(NugetApiKey)
                                 .CombineWith(
-                                    PackagesDirectory.GlobFiles("*.nupkg"),
+                                    ArtifactPaths.Packages.GlobFiles("*.nupkg"),
                                     (settings, package) => settings.SetTargetPath(package)
                                 )
                         )
@@ -51,18 +38,24 @@ interface INugetPush : INukeBuild, ICreateGitHubRelease, IHazNugetSourceList
         _ =>
             _.Executes(async () =>
             {
-                Release release = await GetOrCreateRelease();
+                long repositoryId = await GetRepositoryId();
+                Release release = await GitHubTasks.GitHubClient.Repository.Release.Get(
+                    repositoryId,
+                    TagName
+                );
 
-                IEnumerable<Task> downloadTasks =
-                    from asset in release.Assets
-                    let name = asset.Name
-                    where name.EndsWith("nupkg")
-                    let path = PackagesDirectory / name
-                    select HttpTasks.HttpDownloadFileAsync(
-                        asset.BrowserDownloadUrl,
-                        path,
-                        FileMode.CreateNew
-                    );
+                AbsolutePath GetArtifactPath(string artifactName)
+                {
+                    return ArtifactPaths.Packages / artifactName;
+                }
+
+                IEnumerable<Task> downloadTasks = release
+                    .Assets.Where(asset => asset.Name.EndsWith("nupkg"))
+                    .Select(asset =>
+                    {
+                        var path = GetArtifactPath(asset.Name);
+                        return HttpTasks.HttpDownloadFileAsync(asset.BrowserDownloadUrl, path);
+                    });
 
                 await Task.WhenAll(downloadTasks);
             });
