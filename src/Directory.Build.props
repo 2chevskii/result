@@ -1,0 +1,24 @@
+<Project>
+
+  <PropertyGroup Label="General">
+    <Description>Result pkg</Description>
+    <PackageReleaseNotes>https://github.com/2chevskii/result/releases/tag/v$(Version)</PackageReleaseNotes>
+    <PackageTags>result</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon_128.jpg</PackageIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Debug">
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)..\LICENSE" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="$(MSBuildThisFileDirectory)..\assets\icon_128.jpg" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+</Project>
