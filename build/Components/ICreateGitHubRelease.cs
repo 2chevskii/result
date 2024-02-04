@@ -8,6 +8,7 @@ using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.GitHub;
+using Nuke.Common.Utilities.Collections;
 using Octokit;
 using Serilog;
 using ContentType = Azure.Core.ContentType;
@@ -65,7 +66,7 @@ interface ICreateGitHubRelease : IHazVersion, IHazGitRepository, IHazArtifacts
                 });
 
     IEnumerable<AbsolutePath> GetPackageAssets() =>
-        ArtifactPaths.Packages.GetFiles("*.nupkg").ToArray();
+        ArtifactPaths.Packages.GlobFiles("*.{nupkg,snupkg}").ToArray();
 
     IEnumerable<AbsolutePath> PrepareAndGetLibraryAssets() =>
         from dir in ArtifactPaths.Libraries.GetDirectories().ToArray()
