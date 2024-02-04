@@ -8,6 +8,9 @@ using Nuke.Common.Utilities.Collections;
 
 interface ICompile : IRestore, IHazVersion, IHazConfiguration, IHazArtifacts
 {
+    [Parameter]
+    bool CopyLibs => TryGetValue<bool?>(() => CopyLibs).GetValueOrDefault();
+
     Target CompileMain =>
         _ =>
             _.DependsOn(Restore)
@@ -40,9 +43,9 @@ interface ICompile : IRestore, IHazVersion, IHazConfiguration, IHazArtifacts
 
     Target Compile => _ => _.DependsOn(CompileMain, CompileTests);
 
-    Target CopyLibrariesToArtifactsDirectory =>
+    Target CopyLibraryArtifacts =>
         _ =>
-            _.OnlyWhenStatic(() => CopyLibsOutput)
+            _.OnlyWhenStatic(() => CopyLibs)
                 .TriggeredBy(CompileMain)
                 .OnlyWhenStatic(() => Configuration == Configuration.Release)
                 .Unlisted()
@@ -69,7 +72,4 @@ interface ICompile : IRestore, IHazVersion, IHazConfiguration, IHazArtifacts
                 .EnableNoDependencies()
                 .SetConfiguration(Configuration)
                 .SetVersion(Version.SemVer);
-
-    [Parameter]
-    bool CopyLibsOutput => TryGetValue<bool?>(() => CopyLibsOutput).GetValueOrDefault();
 }

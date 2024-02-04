@@ -8,7 +8,7 @@ interface IHazArtifacts : INukeBuild
         new ArtifactPathCollection { Root = RootDirectory / "artifacts" };
 
     void InitializeArtifactsDirectories() =>
-        ArtifactPaths.All.ForEach(x => x.CreateOrCleanDirectory());
+        ArtifactPaths.All.ForEach(x => x.CreateDirectory());
 
     class ArtifactPathCollection
     {
