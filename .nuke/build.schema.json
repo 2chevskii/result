@@ -90,12 +90,14 @@
               "Docs",
               "DocsClean",
               "DocsCompile",
-              "DocsGzip",
+              "DocsCopy",
+              "DocsDev",
               "DocsPreview",
+              "DocsRestore",
               "Pack",
+              "PatchDocsPackageJson",
               "ReportCoverage",
               "Restore",
-              "RestoreTools",
               "Test"
             ]
           }
@@ -122,12 +124,14 @@
               "Docs",
               "DocsClean",
               "DocsCompile",
-              "DocsGzip",
+              "DocsCopy",
+              "DocsDev",
               "DocsPreview",
+              "DocsRestore",
               "Pack",
+              "PatchDocsPackageJson",
               "ReportCoverage",
               "Restore",
-              "RestoreTools",
               "Test"
             ]
           }

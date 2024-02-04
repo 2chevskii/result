@@ -54,7 +54,7 @@ interface ICompile : IRestore, IHazVersion, IHazConfiguration, IHazArtifacts
                                     / "bin"
                                     / Configuration
                                     / project.GetTargetFrameworks()!.First(),
-                                LibrariesDirectory
+                                ArtifactPaths.Libraries
                                     / $"{project.Name}.{project.GetTargetFrameworks()!.First()}",
                                 DirectoryExistsPolicy.Merge,
                                 FileExistsPolicy.Overwrite

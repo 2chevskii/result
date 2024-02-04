@@ -76,7 +76,7 @@ interface ICreateGitHubRelease : IHazVersion, IHazGitRepository, IHazArtifacts
         return release;
     }
 
-    IEnumerable<AbsolutePath> AssetPaths => PackagesDirectory.GetFiles();
+    IEnumerable<AbsolutePath> AssetPaths => ArtifactPaths.Packages.GetFiles();
 }
 
 interface IHazGitRepository : INukeBuild

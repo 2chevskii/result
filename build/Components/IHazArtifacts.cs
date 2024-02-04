@@ -1,22 +1,23 @@
 using Nuke.Common;
 using Nuke.Common.IO;
+using Nuke.Common.Utilities.Collections;
 
 interface IHazArtifacts : INukeBuild
 {
-    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    AbsolutePath PackagesDirectory => ArtifactsDirectory / "pkg";
-    AbsolutePath LibrariesDirectory => ArtifactsDirectory / "lib";
-    AbsolutePath TestResultsDirectory => ArtifactsDirectory / "test_results";
-    AbsolutePath CoverageDirectory => TestResultsDirectory / "coverage";
-    AbsolutePath DocsArtifactsDirectory => ArtifactsDirectory / "docs";
+    ArtifactPathCollection ArtifactPaths =>
+        new ArtifactPathCollection { Root = RootDirectory / "artifacts" };
 
-    void InitializeArtifactsDirectories()
+    void InitializeArtifactsDirectories() =>
+        ArtifactPaths.All.ForEach(x => x.CreateOrCleanDirectory());
+
+    class ArtifactPathCollection
     {
-        ArtifactsDirectory.CreateDirectory();
-        PackagesDirectory.CreateDirectory();
-        LibrariesDirectory.CreateDirectory();
-        DocsArtifactsDirectory.CreateDirectory();
-        TestResultsDirectory.CreateDirectory();
-        CoverageDirectory.CreateDirectory();
+        public AbsolutePath Root { get; init; }
+        public AbsolutePath Packages => Root / "pkg";
+        public AbsolutePath Libraries => Root / "lib";
+        public AbsolutePath Docs => Root / "docs";
+        public AbsolutePath TestResults => Root / "test_results";
+        public AbsolutePath Coverage => TestResults / "coverage";
+        public AbsolutePath[] All => [Root, Packages, Libraries, Docs, TestResults, Coverage];
     }
 }

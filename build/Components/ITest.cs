@@ -9,8 +9,6 @@ using Nuke.Common.Tools.ReportGenerator;
 
 interface ITest : ICompile, IHazArtifacts
 {
-    AbsolutePath CoverageDirectory => TestResultsDirectory / "coverage";
-
     Target Test =>
         _ =>
             _.DependsOn(CompileTests)
@@ -67,10 +65,10 @@ interface ITest : ICompile, IHazArtifacts
     Target Coverage => _ => _.DependsOn(CollectCoverage, ReportCoverage);
 
     AbsolutePath CoverageReportPath(Project project) =>
-        CoverageDirectory / $"report.{MainProjectName(project)}";
+        ArtifactPaths.Coverage / $"report.{MainProjectName(project)}";
 
     AbsolutePath CoveragePath(Project project) =>
-        CoverageDirectory / $"coverage.{MainProjectName(project)}.xml";
+        ArtifactPaths.Coverage / $"coverage.{MainProjectName(project)}.xml";
 
     string MainProjectName(Project testProject) => testProject.Name.Replace(".Tests", string.Empty);
 
@@ -107,7 +105,7 @@ interface ITest : ICompile, IHazArtifacts
                             "GitHubActions;summary.includePassedTests=true;summary.includeSkippedTests=true"
                         )
                 )
-                .SetResultsDirectory(TestResultsDirectory);
+                .SetResultsDirectory(ArtifactPaths.TestResults);
 
     [Parameter]
     bool HtmlTestResults => TryGetValue<bool?>(() => HtmlTestResults).GetValueOrDefault();

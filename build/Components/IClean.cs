@@ -1,4 +1,5 @@
-﻿using Nuke.Common;
+﻿using System.Linq;
+using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
@@ -7,15 +8,6 @@ using Serilog;
 
 interface IClean : ITest
 {
-    AbsolutePath[] ArtifactDirectories =>
-        [
-            PackagesDirectory,
-            LibrariesDirectory,
-            DocsArtifactDirectory,
-            TestResultsDirectory,
-            CoverageDirectory
-        ];
-
     Target CleanProjects =>
         _ =>
             _.Executes(
@@ -36,14 +28,9 @@ interface IClean : ITest
         _ =>
             _.Executes(
                 () =>
-                    ArtifactDirectories.ForEach(x =>
-                    {
-                        Log.Debug(
-                            "Cleaning artifacts directory {Directory}",
-                            ArtifactsDirectory.GetRelativePathTo(x)
-                        );
-                        x.CreateOrCleanDirectory();
-                    })
+                    ArtifactPaths
+                        .All.OrderBy(x => x.ToString().Length)
+                        .ForEach(x => x.CreateOrCleanDirectory())
             );
 
     Target Clean => _ => _.DependsOn(CleanProjects, CleanArtifacts);

@@ -9,8 +9,8 @@ hero:
       text: Get started
       link: /guide/installation
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: API Reference
+      link: /api/
 
 features:
   - title: Feature A

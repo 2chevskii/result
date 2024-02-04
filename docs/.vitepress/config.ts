@@ -1,5 +1,6 @@
 import { defineConfig, DefaultTheme } from "vitepress";
 import exportedApi from "./exportedApi";
+import pkg from "../package.json";
 
 const sidebarApi = exportedApi.map((ns) => {
   return {
@@ -17,7 +18,7 @@ const sidebarApi = exportedApi.map((ns) => {
 
 export default defineConfig({
   title: "Dvchevskii.Result",
-  description: "Dvchevskii.Result Documentation",
+  description: "Dvchevskii.Result oackage documentation",
   base: "/result/",
   assetsDir: "public",
   appearance: "force-dark",
@@ -61,10 +62,12 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
+      { icon: "github", link: "https://github.com/2chevskii/result" },
     ],
 
-    footer: {},
+    footer: {
+      message: `Built with <a href="https://vitepress.dev">VitePress</a> | API version: <code>${pkg["version"]}</code><br/>Released under the MIT license. All rights reserved`,
+    },
     search: { provider: "local" },
   },
   markdown: {
