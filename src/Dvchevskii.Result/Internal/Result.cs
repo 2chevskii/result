@@ -12,4 +12,16 @@
 
         public byte NumericState() => (byte)State();
     }
+
+    public class ConvertableResult<T>
+    {
+        public ResultState State { get; }
+        public T Value { get; }
+
+        public ConvertableResult(ResultState state, T value)
+        {
+            State = state;
+            Value = value;
+        }
+    }
 }

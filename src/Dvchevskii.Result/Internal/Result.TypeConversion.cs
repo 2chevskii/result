@@ -22,5 +22,25 @@ namespace Dvchevskii.Result
                     ),
                 Err<R, E>
             );
+
+        public static implicit operator Result<T, E>(ConvertableResult<T> okResult)
+        {
+            if (okResult.State != ResultState.Ok)
+            {
+                throw new UnexpectedResultException(string.Empty);
+            }
+
+            return Result.Ok<T, E>(okResult.Value);
+        }
+
+        public static implicit operator Result<T, E>(ConvertableResult<E> errResult)
+        {
+            if (errResult.State != ResultState.Err)
+            {
+                throw new UnexpectedResultException(string.Empty);
+            }
+
+            return Result.Err<T, E>(errResult.Value);
+        }
     }
 }

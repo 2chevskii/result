@@ -32,4 +32,27 @@ public class TypeConversionTests
         ConvertErr().UnwrapErr().Should().NotBeNull();
         ConvertErr().Should().BeAssignableTo<Result<float, Exception>>();
     }
+
+    [TestMethod]
+    public void Test_ConvertableResultToOk()
+    {
+        var okRes = new ConvertableResult<int>(ResultState.Ok, 42);
+        /*var errRes = new ConvertableResult<Exception>(
+            ResultState.Err,
+            new Exception("This is an error, baaaaaaaaka")
+        );*/
+
+        okRes
+            .Invoking(r =>
+            {
+                Result<int, bool> typedResult = r;
+                return typedResult;
+            })
+            .Should()
+            .NotThrow()
+            .And.Subject()
+            .State()
+            .Should()
+            .Be(ResultState.Ok);
+    }
 }
