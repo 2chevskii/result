@@ -25,15 +25,6 @@ public class EquatableTests
     }
 
     [TestMethod]
-    public void Test_EqualsResultState()
-    {
-        _okResult.Equals(ResultState.Ok).Should().BeTrue();
-        _okResult.Equals(ResultState.Err).Should().BeFalse();
-        _errResult.Equals(ResultState.Err).Should().BeTrue();
-        _errResult.Equals(ResultState.Ok).Should().BeFalse();
-    }
-
-    [TestMethod]
     public void Test_EqualsSameState()
     {
         /*

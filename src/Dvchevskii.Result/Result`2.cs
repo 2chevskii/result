@@ -4,12 +4,11 @@ namespace Dvchevskii.Result
 {
     public abstract partial class Result<T, E> : Result
     {
-        public Type GetUnderlyingOkType() => typeof(T);
+        public override Type UnderlyingOkType => typeof(T);
+        public override Type UnderlyingErrType => typeof(E);
 
-        public Type GetUnderlyingErrType() => typeof(E);
+        public bool IsOkAnd(Predicate<T> predicate) => IsOk && predicate(UnwrapUnchecked());
 
-        public bool IsOkAnd(Predicate<T> predicate) => IsOk() && predicate(UnwrapUnchecked());
-
-        public bool IsErrAnd(Predicate<E> predicate) => IsErr() && predicate(UnwrapErrUnchecked());
+        public bool IsErrAnd(Predicate<E> predicate) => IsErr && predicate(UnwrapErrUnchecked());
     }
 }

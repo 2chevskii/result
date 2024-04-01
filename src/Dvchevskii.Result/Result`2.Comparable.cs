@@ -6,7 +6,7 @@ namespace Dvchevskii.Result
     {
         public int CompareTo(Result<T, E> other)
         {
-            if (other == null)
+            /*if (other == null)
             {
                 return 1;
             }
@@ -27,7 +27,9 @@ namespace Dvchevskii.Result
                     selfError is IComparable<E> selfErrorCmp
                         ? selfErrorCmp.CompareTo(other.UnwrapErrUnchecked())
                         : stateComparison
-            );
+            );*/
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,7 +11,7 @@ public class PatternMatchingTests
         (
             Result.Ok(42) switch
             {
-                IOk => true,
+                Ok<int, Exception> => true,
                 _ => false
             }
         ).Should().BeTrue();
@@ -19,7 +19,7 @@ public class PatternMatchingTests
         (
             Result.Err<int>(null) switch
             {
-                IOk => true,
+                Ok<int, Exception> => true,
                 _ => false
             }
         ).Should().BeFalse();
@@ -31,7 +31,7 @@ public class PatternMatchingTests
         (
             Result.Ok(42) switch
             {
-                IOk<int> ok => ok.Value == 42,
+                Ok<int, Exception> ok => ok == 42,
                 _ => false
             }
         ).Should().BeTrue();
@@ -39,7 +39,7 @@ public class PatternMatchingTests
         (
             Result.Err<int>(null) switch
             {
-                IOk<int> ok => ok.Value == 42,
+                Ok<int, Exception> ok => ok == 42,
                 _ => false
             }
         ).Should().BeFalse();
@@ -51,7 +51,7 @@ public class PatternMatchingTests
         (
             Result.Err<int>(new Exception()) switch
             {
-                IErr => true,
+                Err<int, Exception> => true,
                 _ => false
             }
         ).Should().BeTrue();
@@ -59,7 +59,7 @@ public class PatternMatchingTests
         (
             Result.Ok(42) switch
             {
-                IErr => true,
+                Err<int, Exception> => true,
                 _ => false
             }
         ).Should().BeFalse();
@@ -71,7 +71,7 @@ public class PatternMatchingTests
         (
             Result.Err<int>(new Exception("__test__")) switch
             {
-                IErr<Exception> e => e.Error.Message == "__test__",
+                Err<int, Exception> e => e.UnwrapErrUnchecked().Message == "__test__",
                 _ => false
             }
         ).Should().BeTrue();
@@ -79,7 +79,7 @@ public class PatternMatchingTests
         (
             Result.Ok(42) switch
             {
-                IErr<Exception> e => e.Error.Message == "__test__",
+                Err<int, Exception> e => e.UnwrapErrUnchecked().Message == "__test__",
                 _ => false
             }
         ).Should().BeFalse();

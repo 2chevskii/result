@@ -6,7 +6,7 @@ namespace Dvchevskii.Result
     {
         public Result<T, E> Inspect(Action<T> inspector)
         {
-            if (IsOk())
+            if (IsOk)
             {
                 inspector(UnwrapUnchecked());
             }
@@ -16,7 +16,7 @@ namespace Dvchevskii.Result
 
         public Result<T, E> InspectErr(Action<E> inspector)
         {
-            if (IsErr())
+            if (IsErr)
             {
                 inspector(UnwrapErrUnchecked());
             }

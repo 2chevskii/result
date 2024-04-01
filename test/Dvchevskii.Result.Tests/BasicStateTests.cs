@@ -30,14 +30,14 @@ public class BasicStateTests
     [TestMethod]
     public void Test_IsOk()
     {
-        _okStateSubjects.Should().OnlyContain(r => r.IsOk());
-        _errStateSubjects.Should().OnlyContain(r => r.IsOk() == false);
+        _okStateSubjects.Should().OnlyContain(r => r.IsOk);
+        _errStateSubjects.Should().OnlyContain(r => r.IsOk);
     }
 
     [TestMethod]
     public void Test_IsErr()
     {
-        _okStateSubjects.Should().OnlyContain(r => r.IsErr() == false);
-        _errStateSubjects.Should().OnlyContain(r => r.IsErr());
+        _okStateSubjects.Should().OnlyContain(r => r.IsErr);
+        _errStateSubjects.Should().OnlyContain(r => r.IsErr);
     }
 }
