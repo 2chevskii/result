@@ -31,9 +31,26 @@ namespace Dvchevskii.Result
             return _error;
         }
 
-        public override bool Equals(Result other)
+        protected override bool Equals(Ok<T, E> ok)
         {
-            throw new NotImplementedException();
+            return ok is null && UnwrapErrUnchecked() is null;
+        }
+
+        protected override bool Equals(Err<T, E> err)
+        {
+            var otherErr = err.UnwrapErrUnchecked();
+
+            if (otherErr is IEquatable<E> equatable)
+            {
+                return equatable.Equals(UnwrapErrUnchecked());
+            }
+
+            if (otherErr is null)
+            {
+                return UnwrapErrUnchecked() is null;
+            }
+
+            return otherErr.Equals(UnwrapErrUnchecked());
         }
     }
 }

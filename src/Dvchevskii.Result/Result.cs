@@ -12,7 +12,5 @@ namespace Dvchevskii.Result
         public abstract Type UnderlyingErrType { get; }
 
         private protected Result() { }
-
-        public abstract bool Equals(Result other);
     }
 }

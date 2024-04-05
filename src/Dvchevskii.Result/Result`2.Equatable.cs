@@ -1,14 +1,15 @@
 using System;
+using System.Reflection;
 
 namespace Dvchevskii.Result
 {
-    public abstract partial class Result<T, E> : IEquatable<Result<T, E>>
+    public abstract partial class Result<T, E> : IEquatable<Result<T, E>>, IEquatable<Result>
     {
         private const int HASHCODE_MULT_CONST = 6689;
 
         public override bool Equals(object obj)
         {
-            if (obj is Result<T,E> resultTe)
+            if (obj is Result<T, E> resultTe)
             {
                 return Equals(resultTe);
             }
@@ -32,7 +33,10 @@ namespace Dvchevskii.Result
                     return obj.Equals(myValue);
                 }
 
-                return obj == null && myValue == null;
+                if (obj is null)
+                {
+                    return myValue is null;
+                }
             }
 
             if (IsErr)
@@ -49,7 +53,40 @@ namespace Dvchevskii.Result
                     return obj.Equals(myErr);
                 }
 
-                return obj == null && myErr == null;
+                if (obj is null)
+                {
+                    return myErr is null;
+                }
+            }
+
+            return false;
+        }
+
+        public bool Equals(Result other)
+        {
+            if (other is Result<T,E> resultTe)
+            {
+                return Equals(resultTe);
+            }
+
+            if (IsOk)
+            {
+                var myValue = UnwrapUnchecked();
+
+                if (other is null)
+                {
+                    return myValue is null;
+                }
+            }
+
+            if (IsErr)
+            {
+                var myError = UnwrapErrUnchecked();
+
+                if (other is null)
+                {
+                    return myError is null;
+                }
             }
 
             return false;
@@ -57,8 +94,36 @@ namespace Dvchevskii.Result
 
         public bool Equals(Result<T, E> other)
         {
-            throw new NotImplementedException();
+            if (other is Ok<T, E> ok)
+            {
+                return Equals(ok);
+            }
+
+            if (other is Err<T, E> err)
+            {
+                return Equals(err);
+            }
+
+            if (other is null)
+            {
+                if (IsOk)
+                {
+                    T okValue = UnwrapUnchecked();
+                    return okValue == null;
+                }
+
+                if (IsErr)
+                {
+                    E errValue = UnwrapErrUnchecked();
+                    return errValue == null;
+                }
+            }
+
+            return false;
         }
+
+        protected abstract bool Equals(Ok<T, E> ok);
+        protected abstract bool Equals(Err<T, E> err);
 
         public override int GetHashCode() =>
             MapOrElse(
